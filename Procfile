@@ -1,1 +1,1 @@
-web: python flight_finder_project/flight_finder.py
+web: flask run --host=0.0.0.0 --port=$PORT
