@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flight Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f8f8f8;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .flight-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .price {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Flight Results</h1>
+
+    {% if outbound %}
+        <h2>Outbound Flights</h2>
+        {% for offer in outbound %}
+            <div class="flight-card">
+                <div class="price">💲 {{ offer.price }}</div>
+                <table>
+                    <tr>
+                        <th>Airline</th>
+                        <th>Flight</th>
+                        <th>From</th>
+                        <th>Departure</th>
+                        <th>To</th>
+                        <th>Arrival</th>
+                    </tr>
+                    {% for seg in offer.segments %}
+                        <tr>
+                            <td>{{ seg.airline }}</td>
+                            <td>{{ seg.number }}</td>
+                            <td>{{ seg.from }}</td>
+                            <td>{{ seg.departure }}</td>
+                            <td>{{ seg.to }}</td>
+                            <td>{{ seg.arrival }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if return_flights %}
+        <h2>Return Flights</h2>
+        {% for offer in return_flights %}
+            <div class="flight-card">
+                <div class="price">💲 {{ offer.price }}</div>
+                <table>
+                    <tr>
+                        <th>Airline</th>
+                        <th>Flight</th>
+                        <th>From</th>
+                        <th>Departure</th>
+                        <th>To</th>
+                        <th>Arrival</th>
+                    </tr>
+                    {% for seg in offer.segments %}
+                        <tr>
+                            <td>{{ seg.airline }}</td>
+                            <td>{{ seg.number }}</td>
+                            <td>{{ seg.from }}</td>
+                            <td>{{ seg.departure }}</td>
+                            <td>{{ seg.to }}</td>
+                            <td>{{ seg.arrival }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <p><a href="/">🔙 New Search</a></p>
+</body>
+</html>
