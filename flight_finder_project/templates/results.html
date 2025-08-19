@@ -1,107 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Flight Results</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 30px;
-            background: #f8f8f8;
-        }
-        h1, h2 {
-            color: #333;
-        }
-        .flight-card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 5px;
-        }
-        th, td {
-            border-bottom: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background: #f0f0f0;
-        }
-        .price {
-            font-weight: bold;
-            color: #007BFF;
-        }
-        a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Results ✈️</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Flight Results</h1>
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
+  <!-- Header -->
+  <header class="bg-white shadow-md py-6">
+    <h1 class="text-3xl font-bold text-blue-600 text-center">Available Flights ✈️</h1>
+  </header>
+
+  <!-- Results -->
+  <main class="flex-grow container mx-auto px-4 py-6">
     {% if outbound %}
-        <h2>Outbound Flights</h2>
-        {% for offer in outbound %}
-            <div class="flight-card">
-                <div class="price">💲 {{ offer.price }}</div>
-                <table>
-                    <tr>
-                        <th>Airline</th>
-                        <th>Flight</th>
-                        <th>From</th>
-                        <th>Departure</th>
-                        <th>To</th>
-                        <th>Arrival</th>
-                    </tr>
-                    {% for seg in offer.segments %}
-                        <tr>
-                            <td>{{ seg.airline }}</td>
-                            <td>{{ seg.number }}</td>
-                            <td>{{ seg.from }}</td>
-                            <td>{{ seg.departure }}</td>
-                            <td>{{ seg.to }}</td>
-                            <td>{{ seg.arrival }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Outbound Flights</h2>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {% for flight in outbound %}
+          <div class="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 relative">
+            
+            <!-- Badge -->
+            <span class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold
+              {% if flight.deal == 'cheapest' %} bg-green-500 text-white
+              {% elif flight.deal == 'most_expensive' %} bg-red-500 text-white
+              {% else %} bg-yellow-500 text-white {% endif %}">
+              {% if flight.deal == 'cheapest' %}Cheapest{% elif flight.deal == 'most_expensive' %}Most Expensive{% else %}Best Deal{% endif %}
+            </span>
+
+            <!-- Airline Logo -->
+            <img src="https://content.airhex.com/content/logos/{{ flight.segments[0].airline }}.png" alt="{{ flight.segments[0].airline }}" class="h-12 mt-2 mb-4">
+
+            <!-- Price -->
+            <h3 class="text-xl font-bold text-blue-600 mb-2">💰 {{ flight.price }}</h3>
+
+            <!-- Segments -->
+            <ul class="text-sm text-gray-700 space-y-2">
+              {% for seg in flight.segments %}
+                <li>✈️ {{ seg.from }} → {{ seg.to }} <br> 🕑 {{ seg.departure }} → {{ seg.arrival }} <br> 🏷 {{ seg.airline }} {{ seg.number }}</li>
+              {% endfor %}
+            </ul>
+          </div>
         {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-gray-600">No outbound flights found.</p>
     {% endif %}
 
     {% if return_flights %}
-        <h2>Return Flights</h2>
-        {% for offer in return_flights %}
-            <div class="flight-card">
-                <div class="price">💲 {{ offer.price }}</div>
-                <table>
-                    <tr>
-                        <th>Airline</th>
-                        <th>Flight</th>
-                        <th>From</th>
-                        <th>Departure</th>
-                        <th>To</th>
-                        <th>Arrival</th>
-                    </tr>
-                    {% for seg in offer.segments %}
-                        <tr>
-                            <td>{{ seg.airline }}</td>
-                            <td>{{ seg.number }}</td>
-                            <td>{{ seg.from }}</td>
-                            <td>{{ seg.departure }}</td>
-                            <td>{{ seg.to }}</td>
-                            <td>{{ seg.arrival }}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
+      <h2 class="text-2xl font-semibold text-gray-700 mt-8 mb-4">Return Flights</h2>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {% for flight in return_flights %}
+          <div class="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition duration-300 relative">
+            <span class="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold
+              {% if flight.deal == 'cheapest' %} bg-green-500 text-white
+              {% elif flight.deal == 'most_expensive' %} bg-red-500 text-white
+              {% else %} bg-yellow-500 text-white {% endif %}">
+              {% if flight.deal == 'cheapest' %}Cheapest{% elif flight.deal == 'most_expensive' %}Most Expensive{% else %}Best Deal{% endif %}
+            </span>
+            <img src="https://content.airhex.com/content/logos/{{ flight.segments[0].airline }}.png" alt="{{ flight.segments[0].airline }}" class="h-12 mt-2 mb-4">
+            <h3 class="text-xl font-bold text-blue-600 mb-2">💰 {{ flight.price }}</h3>
+            <ul class="text-sm text-gray-700 space-y-2">
+              {% for seg in flight.segments %}
+                <li>✈️ {{ seg.from }} → {{ seg.to }} <br> 🕑 {{ seg.departure }} → {{ seg.arrival }} <br> 🏷 {{ seg.airline }} {{ seg.number }}</li>
+              {% endfor %}
+            </ul>
+          </div>
         {% endfor %}
+      </div>
     {% endif %}
+  </main>
 
-    <p><a href="/">🔙 New Search</a></p>
+  <!-- Footer -->
+  <footer class="bg-white shadow-inner py-4 text-center text-gray-500 text-sm">
+    <a href="/" class="text-blue-600 hover:underline">🔙 New Search</a>
+  </footer>
+
 </body>
 </html>
