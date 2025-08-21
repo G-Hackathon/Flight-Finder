@@ -23,6 +23,8 @@ def format_flight_data(data):
     for offer in data:
         price = offer["price"]["total"]
         segments = []
+        logo = None  # default fallback
+
         for itinerary in offer.get("itineraries", []):
             for segment in itinerary.get("segments", []):
                 segments.append({
@@ -33,7 +35,15 @@ def format_flight_data(data):
                     "airline": segment["carrierCode"],
                     "number": segment["number"]
                 })
-        results.append({"price": price, "segments": segments})
+                # Use airline code to guess logo filename (e.g., AA.png for American Airlines)
+                if not logo:
+                    logo = f"{segment['carrierCode']}.png"
+
+        results.append({
+            "price": price,
+            "segments": segments,
+            "logo": logo  # ✅ add logo field
+        })
     return results
 
 
